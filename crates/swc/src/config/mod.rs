@@ -55,6 +55,7 @@ use swc_ecma_transforms::{
     feature::FeatureFlag,
     hygiene, modules,
     modules::{path::NodeImportResolver, rewriter::import_rewriter},
+    nota,
     optimization::{const_modules, json_parse, simplifier},
     pass::{noop, Optional},
     proposals::{decorators, export_default_from, import_assertions},
@@ -838,6 +839,7 @@ impl Options {
                 ),
                 syntax.jsx()
             ),
+            nota::nota(),
             pass,
             Optional::new(jest::jest(), transform.hidden.jest.into_bool()),
             Optional::new(

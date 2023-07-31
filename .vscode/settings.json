@@ -15,6 +15,9 @@
     "[typescript]": {
         "editor.formatOnSave": true
     },
+    "[toml]": {
+        "editor.formatOnSave": false
+    },
     "editor.formatOnSave": true,
     "git.ignoreLimitWarning": true,
     "git.autoRepositoryDetection": false,

@@ -89,6 +89,7 @@ swc_ecma_preset_env = { version = "0.198.17", path = "../swc_ecma_preset_env" }
 swc_ecma_transforms = { version = "0.221.16", path = "../swc_ecma_transforms", features = [
   "compat",
   "module",
+  "nota",
   "optimization",
   "proposal",
   "react",

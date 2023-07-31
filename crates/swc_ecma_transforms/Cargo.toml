@@ -26,6 +26,7 @@ concurrent = [
 module = ["swc_ecma_transforms_module"]
 multi-module-decorator = ["swc_ecma_transforms_proposal/multi-module"]
 optimization = ["swc_ecma_transforms_optimization"]
+nota = ["swc_ecma_transforms_nota"]
 proposal = ["swc_ecma_transforms_proposal"]
 react = ["swc_ecma_transforms_react"]
 typescript = ["swc_ecma_transforms_typescript"]
@@ -37,6 +38,7 @@ swc_ecma_ast                     = { version = "0.107.2", path = "../swc_ecma_as
 swc_ecma_transforms_base         = { version = "0.130.7", path = "../swc_ecma_transforms_base" }
 swc_ecma_transforms_compat       = { version = "0.156.12", path = "../swc_ecma_transforms_compat", optional = true }
 swc_ecma_transforms_module       = { version = "0.173.14", path = "../swc_ecma_transforms_module", optional = true }
+swc_ecma_transforms_nota         = { version = "0.1.0", path = "../swc_ecma_transforms_nota", optional = true }
 swc_ecma_transforms_optimization = { version = "0.190.16", path = "../swc_ecma_transforms_optimization", optional = true }
 swc_ecma_transforms_proposal     = { version = "0.164.12", path = "../swc_ecma_transforms_proposal", optional = true }
 swc_ecma_transforms_react        = { version = "0.176.14", path = "../swc_ecma_transforms_react", optional = true }

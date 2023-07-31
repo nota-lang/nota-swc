@@ -12,6 +12,9 @@ pub use swc_ecma_transforms_compat as compat;
 #[cfg(feature = "swc_ecma_transforms_module")]
 #[cfg_attr(docsrs, doc(cfg(feature = "module")))]
 pub use swc_ecma_transforms_module as modules;
+#[cfg(feature = "swc_ecma_transforms_nota")]
+#[cfg_attr(docsrs, doc(cfg(feature = "nota")))]
+pub use swc_ecma_transforms_nota as nota;
 #[cfg(feature = "swc_ecma_transforms_optimization")]
 #[cfg_attr(docsrs, doc(cfg(feature = "optimization")))]
 pub use swc_ecma_transforms_optimization as optimization;
