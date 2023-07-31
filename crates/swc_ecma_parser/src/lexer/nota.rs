@@ -1,18 +1,17 @@
 use smartstring::LazyCompact;
 
-use crate::Tokens;
-
 use super::*;
+use crate::Tokens;
 
 impl Lexer<'_> {
     pub(super) fn maybe_read_nota_template(&mut self) -> LexResult<Option<Token>> {
         let c = self.cur();
-        
+
         if self.token_context().current() == Some(TokenContext::NotaTemplate) {
             if c == Some('}') {
                 self.bump();
-                return Ok(Some(Token::NotaTemplateEnd));
-            }    
+                return Ok(Some(tok!('}')));
+            }
 
             return self.read_nota_token().map(Some);
         }
@@ -21,7 +20,7 @@ impl Lexer<'_> {
             if c == '@' && self.input.peek() == Some('{') && self.state.is_expr_allowed {
                 self.bump();
                 self.bump();
-                return Ok(Some(Token::NotaTemplateStart));
+                return Ok(Some(tok!("@{")));
             }
         }
 
@@ -31,7 +30,7 @@ impl Lexer<'_> {
     pub(super) fn read_nota_token(&mut self) -> LexResult<Token> {
         let start = self.cur_pos();
         let mut raw = SmartString::<LazyCompact>::new();
-        while let Some(c) = self.cur() {            
+        while let Some(c) = self.cur() {
             if c == '}' {
                 return Ok(Token::NotaText {
                     raw: Atom::new(&*raw),

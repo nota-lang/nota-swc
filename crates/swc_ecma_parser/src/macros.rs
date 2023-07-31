@@ -85,6 +85,9 @@ macro_rules! tok {
     ("${") => {
         crate::token::Token::DollarLBrace
     };
+    ("@{") => {
+        crate::token::Token::AtLBrace
+    };
 
     ('+') => {
         crate::token::Token::BinOp(crate::token::BinOpToken::Add)

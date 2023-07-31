@@ -348,3 +348,22 @@ fn illegal_language_mode_directive2() {
 fn parse_non_strict_for_loop() {
     script("for (var v1 = 1 in v3) {}");
 }
+
+#[test]
+fn nota() {
+    test_parser(r#"@{Hello world}"#, Default::default(), |p| {
+        let expr = p.parse_expr()?;
+        assert_eq!(
+            *expr,
+            Expr::NotaTemplate(NotaTemplate {
+                span: Span {
+                    lo: BytePos(1),
+                    hi: BytePos(15),
+                    ctxt: swc_common::SyntaxContext::empty()
+                },
+                exprs: vec!["Hello world".into()]
+            })
+        );
+        Ok(())
+    });
+}

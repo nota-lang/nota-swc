@@ -393,6 +393,10 @@ impl<I: Tokens> Parser<I> {
                     return self.parse_paren_expr_or_arrow_fn(can_be_arrow, None);
                 }
 
+                tok!("@{") => {
+                    return self.parse_nota_template();
+                }
+
                 _ => {}
             }
         }
@@ -1602,11 +1606,6 @@ impl<I: Tokens> Parser<I> {
 
                 return self.parse_jsx_element().map(into_expr);
             }
-        }
-
-        // parse Nota
-        if let Token::NotaTemplateStart = *cur!(self, true)? {
-            return self.parse_nota_template();
         }
 
         // `super()` can't be handled from parse_new_expr()

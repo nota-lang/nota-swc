@@ -491,6 +491,10 @@ impl State {
                         }
                     }
 
+                    if out == TokenContext::NotaTemplate {
+                        return false;
+                    }
+
                     // expression cannot follow expression
                     !out.is_expr()
                 }
@@ -634,6 +638,11 @@ impl State {
                     } else {
                         true
                     }
+                }
+
+                tok!("@{") => {
+                    context.push(TokenContext::NotaTemplate);
+                    false
                 }
 
                 _ => next.before_expr(),

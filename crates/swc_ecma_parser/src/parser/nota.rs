@@ -11,7 +11,7 @@ impl<I: Tokens> Parser<I> {
 
         let start_pos: swc_common::BytePos = cur_pos!(self);
 
-        if !eat!(self, NotaTemplateStart) {
+        if !eat!(self, "@{") {
             unexpected!(self, "Nota template start");
         }
 
@@ -34,7 +34,7 @@ impl<I: Tokens> Parser<I> {
                 bump!(self);
                 Ok(Some(output))
             }
-            Token::NotaTemplateEnd => {
+            tok!('}') => {
                 bump!(self);
                 Ok(None)
             }

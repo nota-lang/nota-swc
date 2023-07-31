@@ -2158,12 +2158,12 @@ fn nota1() {
     assert_eq!(
         lex(Syntax::default(), r"@{Hello world}"),
         vec![
-            Token::NotaTemplateStart.span(0..2).lb(),
+            tok!("@{").span(0..2).lb(),
             Token::NotaText {
                 raw: "Hello world".into()
             }
             .span(2..13),
-            Token::NotaTemplateEnd.span(13..14)
+            tok!('}').span(13..14)
         ]
     )
 }
