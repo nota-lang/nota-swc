@@ -28,6 +28,7 @@ use crate::{
 mod comments_buffer;
 pub mod input;
 mod jsx;
+mod nota;
 mod number;
 mod state;
 mod table;

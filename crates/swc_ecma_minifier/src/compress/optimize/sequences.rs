@@ -1486,6 +1486,8 @@ impl Optimizer<'_> {
             | Expr::TsAs(_)
             | Expr::TsInstantiation(_)
             | Expr::TsSatisfies(_) => false,
+
+            Expr::NotaTemplate(_) => unreachable!(),
         }
     }
 

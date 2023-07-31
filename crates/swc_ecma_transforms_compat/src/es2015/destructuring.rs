@@ -1197,6 +1197,7 @@ fn can_be_null(e: &Expr) -> bool {
         | Expr::TsSatisfies(TsSatisfiesExpr { ref expr, .. }) => can_be_null(expr),
 
         Expr::Invalid(..) => unreachable!(),
+        Expr::NotaTemplate(..) => unreachable!(),
     }
 }
 

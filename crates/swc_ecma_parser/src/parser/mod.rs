@@ -29,6 +29,7 @@ mod expr;
 mod ident;
 pub mod input;
 mod jsx;
+mod nota;
 mod object;
 mod pat;
 mod stmt;

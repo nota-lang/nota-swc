@@ -304,6 +304,16 @@ macro_rules! tok {
     };
 
     // ----------
+    // Nota
+    // ----------
+    (NotaTemplateStart) => {
+        crate::token::Token::NotaTemplateStart
+    };
+    (NotaTemplateEnd) => {
+        crate::token::Token::NotaTemplateEnd
+    };
+
+    // ----------
     // Typescript
     // ----------
     ("asserts") => {

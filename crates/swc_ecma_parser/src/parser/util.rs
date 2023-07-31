@@ -322,6 +322,8 @@ pub(super) trait ExprExt {
             Expr::TsConstAssertion(..) => false,
 
             Expr::Invalid(..) => false,
+
+            Expr::NotaTemplate(..) => false,
         }
     }
 }

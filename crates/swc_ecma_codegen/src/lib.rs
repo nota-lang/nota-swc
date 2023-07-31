@@ -798,6 +798,7 @@ where
             Expr::TsSatisfies(n) => {
                 emit!(n)
             }
+            Expr::NotaTemplate(ref n) => emit!(n),
         }
 
         if self.comments.is_some() {
@@ -2478,6 +2479,9 @@ where
         self.emit_last_of_list5(parent_node, is_empty, format, start, count)?;
         Ok(())
     }
+
+    #[emitter]
+    pub fn emit_nota_template(&mut self, _node: &NotaTemplate) -> Result {}
 }
 
 /// Patterns

@@ -1604,6 +1604,11 @@ impl<I: Tokens> Parser<I> {
             }
         }
 
+        // parse Nota
+        if let Token::NotaTemplateStart = *cur!(self, true)? {
+            return self.parse_nota_template();
+        }
+
         // `super()` can't be handled from parse_new_expr()
         if eat!(self, "super") {
             let obj = Callee::Super(Super {

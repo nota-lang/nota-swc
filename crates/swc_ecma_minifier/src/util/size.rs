@@ -199,6 +199,8 @@ impl SizeWithCtxt for Expr {
             Expr::TsAs(_) => TODO,
             Expr::TsInstantiation(_) => TODO,
             Expr::TsSatisfies(_) => TODO,
+
+            Expr::NotaTemplate(_) => unreachable!(),
         }
     }
 }

@@ -707,6 +707,7 @@ define!({
         PrivateName(PrivateName),
         OptChain(OptChainExpr),
         Invalid(Invalid),
+        NotaTemplate(NotaTemplate),
     }
     pub struct ThisExpr {
         pub span: Span,
@@ -1891,6 +1892,11 @@ define!({
         pub is_await: bool,
 
         pub decls: Vec<VarDeclarator>,
+    }
+
+    pub struct NotaTemplate {
+        pub span: Span,
+        pub exprs: Vec<Atom>,
     }
 });
 

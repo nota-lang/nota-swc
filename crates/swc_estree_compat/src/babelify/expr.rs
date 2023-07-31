@@ -169,6 +169,10 @@ impl Babelify for Expr {
                 "illegal conversion: Cannot convert {:?} to ExprOutput - babel has no equivalent",
                 &self
             ),
+            Expr::NotaTemplate(_) => panic!(
+                "illegal conversion: Cannot convert {:?} to ExprOutput - babel has no equivalent",
+                &self
+            ),
         }
     }
 }

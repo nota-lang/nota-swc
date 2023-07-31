@@ -114,6 +114,12 @@ pub enum Token {
 
     Shebang(Atom),
     Error(Error),
+
+    NotaTemplateStart,
+    NotaTemplateEnd,
+    NotaText {
+        raw: Atom,
+    },
 }
 
 impl Token {
@@ -158,7 +164,8 @@ impl Token {
             | Self::Regex(..)
             | Self::Num { .. }
             | Self::BigInt { .. }
-            | Self::JSXTagStart => true,
+            | Self::JSXTagStart
+            | Self::NotaTemplateStart => true,
             _ => false,
         }
     }
@@ -665,6 +672,9 @@ impl Debug for Token {
             JSXText { raw } => write!(f, "jsx text ({})", raw)?,
             JSXTagStart => write!(f, "< (jsx tag start)")?,
             JSXTagEnd => write!(f, "> (jsx tag end)")?,
+            NotaTemplateStart => write!(f, "@{{ (nota template start)")?,
+            NotaTemplateEnd => write!(f, "}} (nota template end)")?,
+            NotaText { raw } => write!(f, "nota text ({})", raw)?,
             Shebang(_) => write!(f, "#!")?,
             Token::Error(e) => write!(f, "<lexing error: {:?}>", e)?,
         }

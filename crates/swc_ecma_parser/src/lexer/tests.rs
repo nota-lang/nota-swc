@@ -2152,3 +2152,18 @@ class C {
     assert_eq!(errors.len(), 4);
     assert!(errors.iter().all(|e| e.kind() == &SyntaxError::TS1185));
 }
+
+#[test]
+fn nota1() {
+    assert_eq!(
+        lex(Syntax::default(), r"@{Hello world}"),
+        vec![
+            Token::NotaTemplateStart.span(0..2).lb(),
+            Token::NotaText {
+                raw: "Hello world".into()
+            }
+            .span(2..13),
+            Token::NotaTemplateEnd.span(13..14)
+        ]
+    )
+}

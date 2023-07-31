@@ -1520,6 +1520,8 @@ pub trait ExprExt {
             }
 
             Expr::Invalid(..) => true,
+
+            Expr::NotaTemplate(..) => true,
         }
     }
 }
@@ -2608,6 +2610,8 @@ impl ExprCtx {
             }
 
             Expr::Invalid(..) => unreachable!(),
+
+            Expr::NotaTemplate(..) => unreachable!(),
         }
     }
 }

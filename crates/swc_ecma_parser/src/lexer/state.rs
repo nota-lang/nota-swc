@@ -321,6 +321,10 @@ impl<'a> Iterator for Lexer<'a> {
                 }
             }
 
+            if let Some(token) = self.maybe_read_nota_template()? {
+                return Ok(Some(token));
+            }
+
             if let Some(TokenContext::Tpl {
                 start: start_pos_of_tpl,
             }) = self.state.context.current()
@@ -772,6 +776,7 @@ pub enum TokenContext {
     JSXOpeningTag,
     JSXClosingTag,
     JSXExpr,
+    NotaTemplate,
 }
 
 impl TokenContext {
@@ -785,12 +790,13 @@ impl TokenContext {
                 | Self::FnExpr
                 | Self::ClassExpr
                 | Self::JSXExpr
+                | Self::NotaTemplate
         )
     }
 
     pub(crate) const fn preserve_space(&self) -> bool {
         match self {
-            Self::Tpl { .. } | Self::JSXExpr => true,
+            Self::Tpl { .. } | Self::JSXExpr | Self::NotaTemplate => true,
             _ => false,
         }
     }

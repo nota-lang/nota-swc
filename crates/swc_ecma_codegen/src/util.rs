@@ -163,6 +163,8 @@ impl StartsWithAlphaNum for Expr {
             },
 
             Expr::Invalid(..) => true,
+
+            Expr::NotaTemplate(..) => false,
         }
     }
 }

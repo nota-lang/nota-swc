@@ -167,6 +167,9 @@ pub enum Expr {
 
     #[tag("Invalid")]
     Invalid(Invalid),
+
+    #[tag("NotaTemplate")]
+    NotaTemplate(NotaTemplate),
 }
 
 // Memory layout depends on the version of rustc.
@@ -275,6 +278,7 @@ impl Clone for Expr {
             OptChain(e) => OptChain(e.clone()),
             Invalid(e) => Invalid(e.clone()),
             TsSatisfies(e) => TsSatisfies(e.clone()),
+            NotaTemplate(e) => NotaTemplate(e.clone()),
         }
     }
 }
@@ -1475,6 +1479,16 @@ impl From<OptCall> for CallExpr {
 }
 
 bridge_expr_from!(CallExpr, OptCall);
+
+#[ast_node("NotaTemplate")]
+#[derive(Eq, Hash, EqIgnoreSpan)]
+#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
+pub struct NotaTemplate {
+    pub span: Span,
+
+    #[cfg_attr(feature = "serde-impl", serde(rename = "expressions"))]
+    pub exprs: Vec<Atom>,
+}
 
 test_de!(
     jsx_element,

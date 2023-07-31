@@ -41,7 +41,8 @@ impl_enum!(
         TsSatisfies,
         PrivateName,
         OptChain,
-        Invalid
+        Invalid,
+        NotaTemplate
     ],
     true
 );
@@ -136,3 +137,6 @@ impl_enum!(JSXExpr, [Expr, JSXEmptyExpr]);
 impl_struct!(OptCall, [span, callee, args, type_args]);
 
 impl_enum!(Callee, [Super, Import, Expr]);
+
+// TODO(will): is this right?
+impl_struct!(NotaTemplate, [span]);
