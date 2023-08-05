@@ -16,6 +16,7 @@ use crate::{
     ident::{Ident, PrivateName},
     jsx::{JSXElement, JSXEmptyExpr, JSXFragment, JSXMemberExpr, JSXNamespacedName},
     lit::Lit,
+    nota::NotaTemplate,
     operators::{AssignOp, BinaryOp, UnaryOp, UpdateOp},
     pat::Pat,
     prop::Prop,
@@ -1479,16 +1480,6 @@ impl From<OptCall> for CallExpr {
 }
 
 bridge_expr_from!(CallExpr, OptCall);
-
-#[ast_node("NotaTemplate")]
-#[derive(Eq, Hash, EqIgnoreSpan)]
-#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
-pub struct NotaTemplate {
-    pub span: Span,
-
-    #[cfg_attr(feature = "serde-impl", serde(rename = "expressions"))]
-    pub exprs: Vec<Atom>,
-}
 
 test_de!(
     jsx_element,

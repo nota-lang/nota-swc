@@ -38,6 +38,10 @@ swc_common     = { version = "0.31.18", path = "../swc_common" }
 swc_ecma_ast   = { version = "0.107.2", path = "../swc_ecma_ast" }
 swc_ecma_visit = { version = "0.93.2", path = "../swc_ecma_visit", optional = true }
 
+unicode-ident = "1.0"
+unicode-math-class = "0.1"
+unicode-segmentation = "1"
+
 [target.'cfg(not(any(target_arch = "wasm32", target_arch = "arm")))'.dependencies]
 stacker = { version = "0.1.15", optional = true }
 

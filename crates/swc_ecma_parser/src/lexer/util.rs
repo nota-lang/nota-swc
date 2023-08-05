@@ -2,7 +2,7 @@
 //!
 //!
 //! [babylon/util/identifier.js]:https://github.com/babel/babel/blob/master/packages/babylon/src/util/identifier.js
-use std::char;
+use std::{char, str::pattern::Pattern};
 
 use smartstring::{LazyCompact, SmartString};
 use swc_common::{
@@ -25,7 +25,7 @@ use crate::{
 /// Collector for raw string.
 ///
 /// Methods of this struct is noop if the value is [None].
-pub(super) struct Raw(pub Option<SmartString<LazyCompact>>);
+pub(crate) struct Raw(pub Option<SmartString<LazyCompact>>);
 
 impl Raw {
     #[inline]
@@ -51,7 +51,7 @@ impl Raw {
 // pub const PARAGRAPH_SEPARATOR: char = '\u{2029}';
 
 impl<'a> Lexer<'a> {
-    pub(super) fn span(&self, start: BytePos) -> Span {
+    pub(crate) fn span(&self, start: BytePos) -> Span {
         let end = self.last_pos();
         if cfg!(debug_assertions) && start > end {
             unreachable!(
@@ -68,74 +68,114 @@ impl<'a> Lexer<'a> {
     }
 
     #[inline(always)]
-    pub(super) fn bump(&mut self) {
+    pub(crate) fn bump(&mut self) {
         self.input.bump()
     }
 
     #[inline(always)]
-    pub(super) fn is(&mut self, c: u8) -> bool {
+    pub(crate) fn is(&mut self, c: u8) -> bool {
         self.input.is_byte(c)
     }
 
     #[inline(always)]
-    pub(super) fn is_str(&self, s: &str) -> bool {
+    pub(crate) fn is_str(&self, s: &str) -> bool {
         self.input.is_str(s)
     }
 
     #[inline(always)]
-    pub(super) fn eat(&mut self, c: u8) -> bool {
+    pub(crate) fn eat(&mut self, c: u8) -> bool {
         self.input.eat_byte(c)
     }
 
     #[inline(always)]
-    pub(super) fn cur(&mut self) -> Option<char> {
+    pub(crate) fn eat_str(&mut self, s: &str) -> bool {
+        if self.input.is_str(s) {
+            self.input.bump_bytes(s.len());
+            true
+        } else {
+            false
+        }
+    }
+
+    #[inline(always)]
+    pub(crate) fn eat_while(&mut self, mut f: impl FnMut(char) -> bool) -> &str {
+        let mut start = self.cur_pos();
+        while let Some(c) = self.cur() {
+            if !f(c) {
+                break;
+            }
+            self.bump();
+        }
+        let end = self.cur_pos();
+        self.input.slice(start, end)
+    }
+
+    pub(crate) fn eat_until(&mut self, mut f: impl FnMut(char) -> bool) -> &str {
+        self.eat_while(|c| !f(c))
+    }
+
+    #[inline(always)]
+    pub(crate) fn cur_bump(&mut self) -> Option<char> {
+        let cur = self.cur();
+        self.bump();
+        cur
+    }
+
+    /// Whether the part right behind the cursor starts with the given pattern.
+    #[inline]
+    pub fn at<'b>(&'b self, mut pat: impl Pattern<'b>) -> bool {
+        self.input.as_str()[1..].starts_with(pat)
+    }
+
+    #[inline(always)]
+    pub(crate) fn cur(&self) -> Option<char> {
         self.input.cur()
     }
 
     #[inline(always)]
-    pub(super) fn peek(&mut self) -> Option<char> {
+    pub(crate) fn peek(&self) -> Option<char> {
         self.input.peek()
     }
 
     #[inline(always)]
-    pub(super) fn peek_ahead(&mut self) -> Option<char> {
+    pub(crate) fn peek_ahead(&self) -> Option<char> {
         self.input.peek_ahead()
     }
 
     #[inline(always)]
-    pub(super) fn cur_pos(&mut self) -> BytePos {
+    pub(crate) fn cur_pos(&self) -> BytePos {
         self.input.cur_pos()
     }
 
     #[inline(always)]
-    pub(super) fn last_pos(&self) -> BytePos {
+    pub(crate) fn last_pos(&self) -> BytePos {
         self.input.last_pos()
     }
 
     /// Shorthand for `let span = self.span(start); self.error_span(span)`
     #[cold]
     #[inline(never)]
-    pub(super) fn error<T>(&mut self, start: BytePos, kind: SyntaxError) -> LexResult<T> {
+    pub(crate) fn error<T>(&mut self, start: BytePos, kind: SyntaxError) -> LexResult<T> {
         let span = self.span(start);
         self.error_span(Span::new(span.lo, span.hi, span.ctxt), kind)
     }
 
     #[cold]
     #[inline(never)]
-    pub(super) fn error_span<T>(&mut self, span: Span, kind: SyntaxError) -> LexResult<T> {
+    pub(crate) fn error_span<T>(&mut self, span: Span, kind: SyntaxError) -> LexResult<T> {
         Err(Error::new(span, kind))
     }
 
     #[cold]
     #[inline(never)]
-    pub(super) fn emit_error(&mut self, start: BytePos, kind: SyntaxError) {
+    pub(crate) fn emit_error(&mut self, start: BytePos, kind: SyntaxError) {
         let span = self.span(start);
         self.emit_error_span(Span::new(span.lo, span.hi, span.ctxt), kind)
     }
 
     #[cold]
     #[inline(never)]
-    pub(super) fn emit_error_span(&mut self, span: Span, kind: SyntaxError) {
+    pub(crate) fn emit_error_span(&mut self, span: Span, kind: SyntaxError) {
         if self.ctx.ignore_error {
             return;
         }
@@ -147,14 +187,14 @@ impl<'a> Lexer<'a> {
 
     #[cold]
     #[inline(never)]
-    pub(super) fn emit_strict_mode_error(&mut self, start: BytePos, kind: SyntaxError) {
+    pub(crate) fn emit_strict_mode_error(&mut self, start: BytePos, kind: SyntaxError) {
         let span = self.span(start);
         self.emit_strict_mode_error_span(Span::new(span.lo, span.hi, span.ctxt), kind)
     }
 
     #[cold]
     #[inline(never)]
-    pub(super) fn emit_strict_mode_error_span(&mut self, span: Span, kind: SyntaxError) {
+    pub(crate) fn emit_strict_mode_error_span(&mut self, span: Span, kind: SyntaxError) {
         if self.ctx.strict {
             self.emit_error_span(span, kind);
             return;
@@ -167,7 +207,7 @@ impl<'a> Lexer<'a> {
 
     #[cold]
     #[inline(never)]
-    pub(super) fn emit_module_mode_error(&mut self, start: BytePos, kind: SyntaxError) {
+    pub(crate) fn emit_module_mode_error(&mut self, start: BytePos, kind: SyntaxError) {
         let span = self.span(start);
         self.emit_module_mode_error_span(Span::new(span.lo, span.hi, span.ctxt), kind)
     }
@@ -176,7 +216,7 @@ impl<'a> Lexer<'a> {
     /// code.
     #[cold]
     #[inline(never)]
-    pub(super) fn emit_module_mode_error_span(&mut self, span: Span, kind: SyntaxError) {
+    pub(crate) fn emit_module_mode_error_span(&mut self, span: Span, kind: SyntaxError) {
         let err = Error::new(span, kind);
 
         self.add_module_mode_error(err);
@@ -185,7 +225,7 @@ impl<'a> Lexer<'a> {
     /// Skip comments or whitespaces.
     ///
     /// See https://tc39.github.io/ecma262/#sec-white-space
-    pub(super) fn skip_space<const LEX_COMMENTS: bool>(&mut self) -> LexResult<()> {
+    pub(crate) fn skip_space<const LEX_COMMENTS: bool>(&mut self) -> LexResult<()> {
         loop {
             let (offset, newline) = {
                 let mut skip = SkipWhitespace {
@@ -219,7 +259,7 @@ impl<'a> Lexer<'a> {
     }
 
     #[inline(never)]
-    pub(super) fn skip_line_comment(&mut self, start_skip: usize) {
+    pub(crate) fn skip_line_comment(&mut self, start_skip: usize) {
         let start = self.cur_pos();
         self.input.bump_bytes(start_skip);
         let slice_start = self.cur_pos();
@@ -269,7 +309,7 @@ impl<'a> Lexer<'a> {
 
     /// Expects current char to be '/' and next char to be '*'.
     #[inline(never)]
-    pub(super) fn skip_block_comment(&mut self) -> LexResult<()> {
+    pub(crate) fn skip_block_comment(&mut self) -> LexResult<()> {
         let start = self.cur_pos();
 
         debug_assert_eq!(self.cur(), Some('/'));

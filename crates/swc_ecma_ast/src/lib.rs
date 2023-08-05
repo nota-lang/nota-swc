@@ -22,8 +22,8 @@ pub use self::{
     expr::{
         ArrayLit, ArrowExpr, AssignExpr, AwaitExpr, BinExpr, BlockStmtOrExpr, CallExpr, Callee,
         ClassExpr, CondExpr, Expr, ExprOrSpread, FnExpr, Import, MemberExpr, MemberProp,
-        MetaPropExpr, MetaPropKind, NewExpr, NotaTemplate, ObjectLit, OptCall, OptChainBase,
-        OptChainExpr, ParenExpr, PatOrExpr, PropOrSpread, SeqExpr, SpreadElement, Super, SuperProp,
+        MetaPropExpr, MetaPropKind, NewExpr, ObjectLit, OptCall, OptChainBase, OptChainExpr,
+        ParenExpr, PatOrExpr, PropOrSpread, SeqExpr, SpreadElement, Super, SuperProp,
         SuperPropExpr, TaggedTpl, ThisExpr, Tpl, TplElement, UnaryExpr, UpdateExpr, YieldExpr,
     },
     function::{Function, Param, ParamOrTsParamProp},
@@ -42,6 +42,10 @@ pub use self::{
         ExportDefaultSpecifier, ExportNamedSpecifier, ExportNamespaceSpecifier, ExportSpecifier,
         ImportDecl, ImportDefaultSpecifier, ImportNamedSpecifier, ImportSpecifier,
         ImportStarAsSpecifier, ModuleDecl, ModuleExportName, NamedExport,
+    },
+    nota::{
+        NotaElem, NotaElems, NotaListItem, NotaParbreak, NotaSpace, NotaStrong, NotaTemplate,
+        NotaText,
     },
     operators::{AssignOp, BinaryOp, UnaryOp, UpdateOp},
     pat::{
@@ -88,6 +92,7 @@ mod list;
 mod lit;
 mod module;
 mod module_decl;
+mod nota;
 mod operators;
 mod pat;
 mod prop;

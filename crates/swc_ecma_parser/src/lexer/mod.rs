@@ -17,6 +17,7 @@ use self::{
 };
 pub use self::{
     input::Input,
+    nota::NotaToken,
     state::{TokenContext, TokenContexts},
 };
 use crate::{
@@ -28,7 +29,7 @@ use crate::{
 mod comments_buffer;
 pub mod input;
 mod jsx;
-mod nota;
+pub mod nota;
 mod number;
 mod state;
 mod table;

@@ -26,7 +26,8 @@
         "crates/swc_html_parser/tests/html5lib-tests"
     ],
     "eslint.enable": false,
-    "rust-analyzer.check.command": "clippy",
+    // "rust-analyzer.check.command": "clippy",
+    "rust-analyzer.checkOnSave.enable": false,
     "rust-analyzer.check.features": [
         // We use this to make IDE faster
         "rust-analyzer",

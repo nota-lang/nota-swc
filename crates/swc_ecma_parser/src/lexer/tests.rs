@@ -2159,11 +2159,35 @@ fn nota1() {
         lex(Syntax::default(), r"@{Hello world}"),
         vec![
             tok!("@{").span(0..2).lb(),
-            Token::NotaText {
-                raw: "Hello world".into()
-            }
+            Token::Nota(NotaToken::Text {
+                value: "Hello world".into()
+            })
             .span(2..13),
-            tok!('}').span(13..14)
+            Token::Nota(NotaToken::RightBrace).span(13..14)
+        ]
+    )
+}
+
+#[test]
+fn nota2() {
+    use NotaToken::*;
+    let n = |t| Token::Nota(t);
+    assert_eq!(
+        lex_tokens(Syntax::default(), r"@{- Hello *world*}"),
+        vec![
+            tok!("@{"),
+            n(ListMarker),
+            n(Space { newline: false }),
+            n(Text {
+                value: "Hello".into()
+            }),
+            n(Space { newline: false }),
+            n(Star),
+            n(Text {
+                value: "world".into()
+            }),
+            n(Star),
+            n(RightBrace)
         ]
     )
 }

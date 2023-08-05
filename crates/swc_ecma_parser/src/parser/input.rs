@@ -14,6 +14,7 @@ use crate::{
 /// Clone should be cheap if you are parsing typescript because typescript
 /// syntax requires backtracking.
 pub trait Tokens: Clone + Iterator<Item = TokenAndSpan> {
+    fn input(&self) -> &str;
     fn set_ctx(&mut self, ctx: Context);
     fn ctx(&self) -> Context;
     fn syntax(&self) -> Syntax;
@@ -88,6 +89,10 @@ impl Iterator for TokensInput {
 }
 
 impl Tokens for TokensInput {
+    fn input(&self) -> &str {
+        unimplemented!()
+    }
+
     fn set_ctx(&mut self, ctx: Context) {
         if ctx.module && !self.module_errors.borrow().is_empty() {
             let mut module_errors = self.module_errors.borrow_mut();
@@ -206,6 +211,10 @@ impl<I: Tokens> Iterator for Capturing<I> {
 }
 
 impl<I: Tokens> Tokens for Capturing<I> {
+    fn input(&self) -> &str {
+        self.inner.input()
+    }
+
     fn set_ctx(&mut self, ctx: Context) {
         self.inner.set_ctx(ctx)
     }

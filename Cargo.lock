@@ -4132,6 +4132,9 @@ dependencies = [
  "testing",
  "tracing",
  "typed-arena",
+ "unicode-ident",
+ "unicode-math-class",
+ "unicode-segmentation",
  "walkdir",
 ]
 
@@ -5465,6 +5468,12 @@ checksum = "3a52dcaab0c48d931f7cc8ef826fa51690a08e1ea55117ef26f89864f532383f"
 dependencies = [
  "regex",
 ]
+
+[[package]]
+name = "unicode-math-class"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7d246cf599d5fae3c8d56e04b20eb519adb89a8af8d0b0fbcded369aa3647d65"
 
 [[package]]
 name = "unicode-normalization"

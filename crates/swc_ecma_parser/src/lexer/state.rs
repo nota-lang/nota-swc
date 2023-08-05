@@ -5,7 +5,8 @@ use tracing::trace;
 
 use super::{
     comments_buffer::{BufferedComment, BufferedCommentKind},
-    Context, Input, Lexer,
+    nota::NotaTokenContext,
+    Context, Input, Lexer, NotaToken,
 };
 use crate::{
     error::{Error, SyntaxError},
@@ -120,6 +121,11 @@ impl<'a> From<&'a Token> for TokenType {
 }
 
 impl Tokens for Lexer<'_> {
+    #[inline]
+    fn input(&self) -> &str {
+        self.input.input()
+    }
+
     #[inline]
     fn set_ctx(&mut self, ctx: Context) {
         if ctx.module && !self.module_errors.borrow().is_empty() {
@@ -491,10 +497,6 @@ impl State {
                         }
                     }
 
-                    if out == TokenContext::NotaTemplate {
-                        return false;
-                    }
-
                     // expression cannot follow expression
                     !out.is_expr()
                 }
@@ -641,7 +643,12 @@ impl State {
                 }
 
                 tok!("@{") => {
-                    context.push(TokenContext::NotaTemplate);
+                    context.push(TokenContext::Nota(NotaTokenContext::Markup));
+                    false
+                }
+
+                Token::Nota(NotaToken::RightBrace) => {
+                    context.pop();
                     false
                 }
 
@@ -753,7 +760,7 @@ impl TokenContexts {
     }
 
     #[inline]
-    fn push(&mut self, t: TokenContext) {
+    pub fn push(&mut self, t: TokenContext) {
         self.0.push(t);
 
         if cfg!(feature = "debug") {
@@ -785,7 +792,7 @@ pub enum TokenContext {
     JSXOpeningTag,
     JSXClosingTag,
     JSXExpr,
-    NotaTemplate,
+    Nota(NotaTokenContext),
 }
 
 impl TokenContext {
@@ -799,13 +806,13 @@ impl TokenContext {
                 | Self::FnExpr
                 | Self::ClassExpr
                 | Self::JSXExpr
-                | Self::NotaTemplate
+                | Self::Nota(..)
         )
     }
 
     pub(crate) const fn preserve_space(&self) -> bool {
         match self {
-            Self::Tpl { .. } | Self::JSXExpr | Self::NotaTemplate => true,
+            Self::Tpl { .. } | Self::JSXExpr | Self::Nota(..) => true,
             _ => false,
         }
     }

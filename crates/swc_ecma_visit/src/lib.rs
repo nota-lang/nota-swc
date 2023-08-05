@@ -1896,7 +1896,38 @@ define!({
 
     pub struct NotaTemplate {
         pub span: Span,
-        pub exprs: Vec<Atom>,
+        pub elems: Vec<NotaElem>,
+    }
+
+    pub enum NotaElem {
+        Text(NotaText),
+        Space(NotaSpace),
+        Parbreak(NotaParbreak),
+        Strong(NotaStrong),
+        List(NotaListItem)
+    }
+
+    pub struct NotaText {
+        pub span: Span,
+        pub value: JsWord,
+    }
+
+    pub struct NotaSpace {
+        pub span: Span
+    }
+
+    pub struct NotaParbreak {
+        pub span: Span
+    }
+
+    pub struct NotaStrong {
+        pub span: Span,
+        pub elems: Vec<NotaElem>
+    }
+
+    pub struct NotaListItem {
+        pub span: Span,
+        pub elems: Vec<NotaElem>
     }
 });
 

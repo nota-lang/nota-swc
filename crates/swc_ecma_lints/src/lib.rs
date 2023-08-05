@@ -1,3 +1,4 @@
+#![allow(warnings)]
 #![cfg_attr(feature = "non_critical_lints", deny(unused))]
 #![cfg_attr(feature = "non_critical_lints", deny(clippy::all))]
 #![feature(box_patterns)]

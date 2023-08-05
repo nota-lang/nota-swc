@@ -116,13 +116,15 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(test, feature(test))]
 #![deny(clippy::all)]
-#![deny(unused)]
+#![allow(warnings)] // TODO: REMOVE THIS EVENTUALLY
+// #![deny(unused)]
 #![allow(clippy::nonminimal_bool)]
 #![allow(clippy::too_many_arguments)]
 #![allow(clippy::unnecessary_unwrap)]
 #![allow(clippy::vec_box)]
 #![allow(clippy::wrong_self_convention)]
 #![allow(clippy::match_like_matches_macro)]
+#![feature(pattern)]
 
 use error::Error;
 use lexer::Lexer;

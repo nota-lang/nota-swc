@@ -13,7 +13,10 @@ pub(crate) use swc_ecma_ast::AssignOp as AssignOpToken;
 use swc_ecma_ast::BinaryOp;
 
 pub(crate) use self::{AssignOpToken::*, BinOpToken::*, Keyword::*, Token::*};
-use crate::{error::Error, lexer::LexResult};
+use crate::{
+    error::Error,
+    lexer::{LexResult, NotaToken},
+};
 
 #[derive(Clone, PartialEq)]
 pub enum Token {
@@ -116,9 +119,7 @@ pub enum Token {
     Error(Error),
 
     AtLBrace,
-    NotaText {
-        raw: Atom,
-    },
+    Nota(NotaToken),
 }
 
 impl Token {
@@ -672,7 +673,7 @@ impl Debug for Token {
             JSXTagStart => write!(f, "< (jsx tag start)")?,
             JSXTagEnd => write!(f, "> (jsx tag end)")?,
             AtLBrace => write!(f, "@{{")?,
-            NotaText { raw } => write!(f, "nota text ({})", raw)?,
+            Nota(tok) => write!(f, "{tok:?}")?,
             Shebang(_) => write!(f, "#!")?,
             Token::Error(e) => write!(f, "<lexing error: {:?}>", e)?,
         }

@@ -1,4 +1,4 @@
-use swc_common::{comments::SingleThreadedComments, BytePos};
+use swc_common::{comments::SingleThreadedComments, BytePos, SyntaxContext};
 
 use super::*;
 use crate::{test_parser, EsConfig, TsConfig};
@@ -350,20 +350,51 @@ fn parse_non_strict_for_loop() {
 }
 
 #[test]
-fn nota() {
+fn nota_simple() {
     test_parser(r#"@{Hello world}"#, Default::default(), |p| {
         let expr = p.parse_expr()?;
+
         assert_eq!(
             *expr,
             Expr::NotaTemplate(NotaTemplate {
                 span: Span {
                     lo: BytePos(1),
                     hi: BytePos(15),
-                    ctxt: swc_common::SyntaxContext::empty()
+                    ctxt: SyntaxContext::empty()
                 },
-                exprs: vec!["Hello world".into()]
+                elems: vec![NotaElem::Text(NotaText {
+                    span: Span {
+                        lo: BytePos(3),
+                        hi: BytePos(14),
+                        ctxt: SyntaxContext::empty()
+                    },
+                    value: "Hello world".into()
+                })]
             })
         );
         Ok(())
     });
+}
+
+#[test]
+fn nota_strong() {
+    test_parser(r#"@{Hello *world*}"#, Default::default(), |p| {
+        let expr = p.parse_expr()?;
+        println!("{expr:#?}");
+        Ok(())
+    });
+}
+
+#[test]
+fn nota_list() {
+    test_parser(
+        r#"@{- Hello
+- world}"#,
+        Default::default(),
+        |p| {
+            let expr = p.parse_expr()?;
+            println!("{expr:#?}");
+            Ok(())
+        },
+    );
 }

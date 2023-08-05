@@ -289,6 +289,8 @@ pub enum SyntaxError {
 
     ReservedTypeAssertion,
     ReservedArrowTypeParam,
+
+    NotaLexerFailure(String),
 }
 
 impl SyntaxError {
@@ -747,6 +749,7 @@ impl SyntaxError {
                                                     .mts or .cts extension. Add a trailing comma, \
                                                     as in `<T,>() => ...`."
                 .into(),
+            SyntaxError::NotaLexerFailure(s) => s.clone().into(),
         }
     }
 }

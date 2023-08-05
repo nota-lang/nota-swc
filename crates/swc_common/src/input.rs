@@ -63,17 +63,22 @@ impl<'a> From<&'a SourceFile> for StringInput<'a> {
 
 impl<'a> Input for StringInput<'a> {
     #[inline]
-    fn cur(&mut self) -> Option<char> {
+    fn input(&self) -> &str {
+        self.orig
+    }
+
+    #[inline]
+    fn cur(&self) -> Option<char> {
         self.iter.clone().next().map(|i| i.1)
     }
 
     #[inline]
-    fn peek(&mut self) -> Option<char> {
+    fn peek(&self) -> Option<char> {
         self.iter.clone().nth(1).map(|i| i.1)
     }
 
     #[inline]
-    fn peek_ahead(&mut self) -> Option<char> {
+    fn peek_ahead(&self) -> Option<char> {
         self.iter.clone().nth(2).map(|i| i.1)
     }
 
@@ -89,7 +94,7 @@ impl<'a> Input for StringInput<'a> {
     }
 
     #[inline]
-    fn cur_as_ascii(&mut self) -> Option<u8> {
+    fn cur_as_ascii(&self) -> Option<u8> {
         let first_byte = *self.as_str().as_bytes().first()?;
         if first_byte <= 0x7f {
             Some(first_byte)
@@ -105,13 +110,19 @@ impl<'a> Input for StringInput<'a> {
 
     /// TODO(kdy1): Remove this?
     #[inline]
-    fn cur_pos(&mut self) -> BytePos {
+    fn cur_pos(&self) -> BytePos {
         self.last_pos
     }
 
     #[inline]
     fn last_pos(&self) -> BytePos {
         self.last_pos
+    }
+
+    #[inline]
+    fn char_at(&self, pos: BytePos) -> Option<char> {
+        let s = &self.orig[(pos.0 as usize)..];
+        s.chars().next()
     }
 
     #[inline]
@@ -230,15 +241,16 @@ impl<'a> Input for StringInput<'a> {
 }
 
 pub trait Input: Clone {
-    fn cur(&mut self) -> Option<char>;
-    fn peek(&mut self) -> Option<char>;
-    fn peek_ahead(&mut self) -> Option<char>;
+    fn input(&self) -> &str;
+    fn cur(&self) -> Option<char>;
+    fn peek(&self) -> Option<char>;
+    fn peek_ahead(&self) -> Option<char>;
     fn bump(&mut self);
 
     /// Returns [None] if it's end of input **or** current character is not an
     /// ascii character.
     #[inline]
-    fn cur_as_ascii(&mut self) -> Option<u8> {
+    fn cur_as_ascii(&self) -> Option<u8> {
         self.cur().and_then(|i| {
             if i.is_ascii() {
                 return Some(i as u8);
@@ -249,9 +261,11 @@ pub trait Input: Clone {
 
     fn is_at_start(&self) -> bool;
 
-    fn cur_pos(&mut self) -> BytePos;
+    fn cur_pos(&self) -> BytePos;
 
     fn last_pos(&self) -> BytePos;
+
+    fn char_at(&self, pos: BytePos) -> Option<char>;
 
     fn slice(&mut self, start: BytePos, end: BytePos) -> &str;
 
